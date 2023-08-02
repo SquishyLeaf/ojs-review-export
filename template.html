@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review # {{ REVIEW_ID }}</title>
+  <style>
+    .option-selected {
+      text-decoration-line: underline;
+      -webkit-text-decoration-line: underline;
+      text-decoration-color: red;
+      text-decoration-thickness: 3px;
+    }
+
+    html {
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 3rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .header-date {
+      font-size: 1rem;
+      color: darkgray;
+    }
+
+    .header-title {
+      font-size: 1.2rem;
+    }
+
+    header {
+      border-bottom: 2px solid darkred;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    .review-content {
+      border-bottom: 2px solid darkred;
+      padding-bottom: 1rem;
+    }
+
+    .question-description {
+      font-size: 1rem;
+      color: darkgray;
+    }
+
+    .comment-text {
+      border-radius: 1rem;
+      border: 2px gray solid;
+      max-width: 60%;
+      padding: 1rem;
+      resize: none;
+    }
+
+    @media (max-width: 700px) {
+      .comment-text {
+        max-width: 100%;
+      }
+    }
+
+    .options {
+      margin-bottom: 1rem;
+    }
+
+    .options>li {
+      line-height: 1.5rem;
+    }
+
+    .recommendation {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <p class="header-title">{{ JOURNAL_TITLE }}</p>
+    <h1>Review #{{ REVIEW_ID }}</h1>
+    <p class="header-date">Submitted at {{ SUBMISSION_DATE }}</p>
+    <p class="header-title">{{ ARTICLE_TITLE }} (#{{ ARTICLE_ID }})</p>
+    {{ AUTHORS }}
+    <p>Reviewer: <strong>{{ REVIEWER_NAME }}</strong></p>
+  </header>
+  <article>
+    <h2>Evaluation criteria and scores</h2>
+    <ol class="review-content">
+      {{ FORM_RESPONSES }}
+    </ol>
+    <p class="recommendation">Recommendation: {{ RECOMMENDATION }}</p>
+  </article>
+
+  <footer>
+    <small>Generated at {{ CURRENT_DATE }}</small>
+  </footer>
+</body>
+
+</html>
