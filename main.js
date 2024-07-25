@@ -192,14 +192,13 @@ for (const subRev of subsRevs) {
         AND set2.setting_name = 'familyName'
         AND set1.author_id = ?
         AND set1.setting_value <> ''
-        AND set2.setting_value <> ''
         AND set1.locale = set2.locale
         ORDER BY set1.locale = ? DESC
       `,
             [id.id, config.locale]
         );
 
-        authors.push(authorName[0].firstName + " " + authorName[0].lastName);
+        authors.push(`${authorName[0].firstName} ${authorName[0].lastName}`);
     }
 
     review.articleAuthors = authors;
