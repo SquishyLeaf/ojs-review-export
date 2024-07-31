@@ -2,6 +2,7 @@ import "dotenv/config";
 import { createConnection } from "mariadb";
 import { open, copyFile } from "fs/promises";
 import * as path from "path";
+import { exit } from "process";
 
 const currentDate = new Date().toLocaleDateString();
 
@@ -39,14 +40,12 @@ const recommendations = [
 const viewableCommentLabel = "Comment for author and editor";
 const nonViewableCommentLabel = "Comment for editor only";
 
-const conn = await createConnection({
-    host: process.env.DB_HOST,
-    socketPath: process.env.DB_SOCKET,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    bigIntAsNumber: true,
-});
+if (process.argv.includes("-h") || process.argv.includes("--help")) {
+    console.log(
+        "Usage: ojs-review-export [-p <output_path>] [-f <date_from>] [-t <date_to>]"
+    );
+    process.exit(0);
+}
 
 const config = {
     from: undefined,
@@ -56,11 +55,39 @@ const config = {
     filesDir: process.env.OJS_FILES_DIR,
 };
 
-if (process.argv.includes("-h")) {
-    console.log(
-        "Usage: ojs-review-export [-p <output_path>] [-f <date_from>] [-t <date_to>]"
-    );
-    process.exit(0);
+for (let i = 2; i < process.argv.length; i += 1) {
+    switch (process.argv[i]) {
+        case '-p':
+            i += 1;
+            config.path = process.argv.at(i);
+            if (config.path == undefined || config.path.startsWith("-")) {
+                console.log("Error: Option '-p' (path) requires one parameter.");
+                exit(2);
+            }
+            break;
+        case '-f':
+            i += 1;
+            config.from = process.argv.at(i);
+            if (config.from == undefined || config.from.startsWith("-")) {
+                console.log("Error: Option '-f' (date-from) requires one parameter.");
+                exit(2);
+            }
+            break;
+        case '-t':
+            i += 1;
+            config.to = process.argv.at(i);
+            if (config.to == undefined || config.to.startsWith("-")) {
+                console.log("Error: Option '-t' (date-to) requires one parameter.");
+                exit(2);
+            }
+            break;
+        default:
+            console.log(
+                "Usage: ojs-review-export [-p <output_path>] [-f <date_from>] [-t <date_to>]"
+            );
+            console.log("Error: unrecognized argument: ", process.argv.at(i));
+            exit(2);
+    }
 }
 
 if (process.env.LOCALE) {
@@ -71,21 +98,14 @@ if (!config.filesDir) {
     config.filesDir = "/var/www/files";
 }
 
-const pathOptionIndex = process.argv.findIndex((arg) => arg == "-p");
-const fromOptionIndex = process.argv.findIndex((arg) => arg == "-f");
-const toOptionIndex = process.argv.findIndex((arg) => arg == "-t");
-
-if (pathOptionIndex > 0) {
-    config.path = process.argv[pathOptionIndex + 1];
-}
-
-if (fromOptionIndex > 0) {
-    config.from = new Date(process.argv[fromOptionIndex + 1]);
-}
-
-if (toOptionIndex > 0) {
-    config.to = new Date(process.argv[toOptionIndex + 1]);
-}
+const conn = await createConnection({
+    host: process.env.DB_HOST,
+    socketPath: process.env.DB_SOCKET,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    bigIntAsNumber: true,
+});
 
 let subsRevs;
 
