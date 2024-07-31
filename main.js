@@ -50,8 +50,8 @@ if (process.argv.includes("-h") || process.argv.includes("--help")) {
 const config = {
     from: undefined,
     to: undefined,
-    path: process.env.PWD,
-    locale: "en_US",
+    path: process.cwd(),
+    locale: "en",
     filesDir: process.env.OJS_FILES_DIR,
 };
 

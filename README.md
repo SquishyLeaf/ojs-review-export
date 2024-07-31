@@ -18,7 +18,7 @@ Additional files submitted by the reviewer will be copied and renamed to appear 
 - DB_USER
 - DB_NAME
 - DB_PASSWORD
-- LOCALE – `en_US` by default. If your journal has forms in multiple languages, the one specified here will be prioritized.
+- LOCALE – `en` by default. If your journal has forms in multiple languages, the one specified here will be prioritized.
 - OJS_FILES_DIR – `/var/www/files` by default. You need read permissions for this directory.
 
 ## Limitations
