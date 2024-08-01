@@ -90,6 +90,18 @@ for (let i = 2; i < process.argv.length; i += 1) {
     }
 }
 
+open(config.path).then((handle) => {
+    handle.stat().then((stats) => {
+        if (!stats.isDirectory()) {
+            console.log("Error: Option '-p' (path) requires a path to directory.");
+            exit(2);
+        }
+    })
+}).catch((reason) => {
+    console.log(`Invalid output path: ${config.path}, reason: ${reason}`);
+    exit(73);
+});
+
 if (process.env.LOCALE) {
     config.locale = process.env.LOCALE.replace("-", "_");
 }
